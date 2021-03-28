@@ -97,6 +97,22 @@ def open_image_zip(source, *, max_images: Optional[int]):
             for idx, fname in enumerate(input_images):
                 with z.open(fname, 'r') as file:
                     img = PIL.Image.open(file) # type: ignore
+                    #------------- Convert image made properly before moving on
+                    if img.mode in ["CMYK"]:
+                            img = img.convert('RGB')
+                    # if "P", convert to "RGBA" first
+                    if img.mode in ["P"]:
+                        img = img.convert('RGBA')
+                    if img.mode in ["RGBA"]:
+                        # the default im.convert('RGB') doesn't do a good job dealing
+                        # with transparency. It replaces the alpha channel with a black
+                        # background, and creates jagged edges around objects.
+                        # here, we "paste" the RGBA image onto a new all-white RGB
+                        # image, which results in much better JPG outputs
+                        background = PIL.Image.new("RGB", img.size, (255, 255, 255))
+                        background.paste(img, mask=img.split()[3])
+                        img = background
+                    #-------------
                     img = np.array(img)
                 yield dict(img=img, label=labels.get(fname))
                 if idx >= max_idx-1:
@@ -176,22 +192,6 @@ def make_transform(
         w = img.shape[1]
         h = img.shape[0]
 
-        #------------- Convert image made properly before moving on
-        if img.mode in ["CMYK"]:
-                img = img.convert('RGB')
-        # if "P", convert to "RGBA" first
-        if img.mode in ["P"]:
-            img = img.convert('RGBA')
-        if img.mode in ["RGBA"]:
-            # the default im.convert('RGB') doesn't do a good job dealing
-            # with transparency. It replaces the alpha channel with a black
-            # background, and creates jagged edges around objects.
-            # here, we "paste" the RGBA image onto a new all-white RGB
-            # image, which results in much better JPG outputs
-            background = PIL.Image.new("RGB", img.size, (255, 255, 255))
-            background.paste(img, mask=img.split()[3])
-            img = background
-        #-------------
         if width == w and height == h:
             return img
         img = PIL.Image.fromarray(img)
