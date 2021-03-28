@@ -68,7 +68,24 @@ def open_image_folder(source_dir, *, max_images: Optional[int]):
         for idx, fname in enumerate(input_images):
             arch_fname = os.path.relpath(fname, source_dir)
             arch_fname = arch_fname.replace('\\', '/')
-            img = np.array(PIL.Image.open(fname))
+            img = PIL.Image.open(fname)
+             #------------- Convert image made properly before moving on
+            if img.mode in ["CMYK"]:
+                    img = img.convert('RGB')
+            # if "P", convert to "RGBA" first
+            if img.mode in ["P"]:
+                img = img.convert('RGBA')
+            if img.mode in ["RGBA"]:
+                # the default im.convert('RGB') doesn't do a good job dealing
+                # with transparency. It replaces the alpha channel with a black
+                # background, and creates jagged edges around objects.
+                # here, we "paste" the RGBA image onto a new all-white RGB
+                # image, which results in much better JPG outputs
+                background = PIL.Image.new("RGB", img.size, (255, 255, 255))
+                background.paste(img, mask=img.split()[3])
+                img = background
+            #-------------
+            img = np.array(img)
             yield dict(img=img, label=labels.get(arch_fname))
             if idx >= max_idx-1:
                 break
@@ -97,7 +114,7 @@ def open_image_zip(source, *, max_images: Optional[int]):
             for idx, fname in enumerate(input_images):
                 with z.open(fname, 'r') as file:
                     img = PIL.Image.open(file) # type: ignore
-                    #------------- Convert image made properly before moving on
+                    #------------- Convert image mode properly before moving on
                     if img.mode in ["CMYK"]:
                             img = img.convert('RGB')
                     # if "P", convert to "RGBA" first
@@ -201,22 +218,6 @@ def make_transform(
         return np.array(img)
 
     def center_crop(width, height, img):
-        #------------- Convert image made properly before moving on
-        if img.mode in ["CMYK"]:
-                img = img.convert('RGB')
-        # if "P", convert to "RGBA" first
-        if img.mode in ["P"]:
-            img = img.convert('RGBA')
-        if img.mode in ["RGBA"]:
-            # the default im.convert('RGB') doesn't do a good job dealing
-            # with transparency. It replaces the alpha channel with a black
-            # background, and creates jagged edges around objects.
-            # here, we "paste" the RGBA image onto a new all-white RGB
-            # image, which results in much better JPG outputs
-            background = PIL.Image.new("RGB", img.size, (255, 255, 255))
-            background.paste(img, mask=img.split()[3])
-            img = background
-        #-------------
         crop = np.min(img.shape[:2])
         img = img[(img.shape[0] - crop) // 2 : (img.shape[0] + crop) // 2, (img.shape[1] - crop) // 2 : (img.shape[1] + crop) // 2]
         img = PIL.Image.fromarray(img, 'RGB')
