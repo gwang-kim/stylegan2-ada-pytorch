@@ -188,8 +188,8 @@ def make_transform(
             # background, and creates jagged edges around objects.
             # here, we "paste" the RGBA image onto a new all-white RGB
             # image, which results in much better JPG outputs
-            background = Image.new("RGB", img.size, (255, 255, 255))
-            background.paste(img, mask=im.split()[3])
+            background = PIL.Image.new("RGB", img.size, (255, 255, 255))
+            background.paste(img, mask=img.split()[3])
             img = background
         #-------------
         if width == w and height == h:
@@ -213,8 +213,8 @@ def make_transform(
             # background, and creates jagged edges around objects.
             # here, we "paste" the RGBA image onto a new all-white RGB
             # image, which results in much better JPG outputs
-            background = Image.new("RGB", img.size, (255, 255, 255))
-            background.paste(img, mask=im.split()[3])
+            background = PIL.Image.new("RGB", img.size, (255, 255, 255))
+            background.paste(img, mask=img.split()[3])
             img = background
         #-------------
         crop = np.min(img.shape[:2])
