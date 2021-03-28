@@ -179,18 +179,18 @@ def make_transform(
         #------------- Convert image made properly before moving on
         if img.mode in ["CMYK"]:
                 img = img.convert('RGB')
-            # if "P", convert to "RGBA" first
-            if img.mode in ["P"]:
-                img = img.convert('RGBA')
-            if img.mode in ["RGBA"]:
-                # the default im.convert('RGB') doesn't do a good job dealing
-                # with transparency. It replaces the alpha channel with a black
-                # background, and creates jagged edges around objects.
-                # here, we "paste" the RGBA image onto a new all-white RGB
-                # image, which results in much better JPG outputs
-                background = Image.new("RGB", img.size, (255, 255, 255))
-                background.paste(img, mask=im.split()[3])
-                img = background
+        # if "P", convert to "RGBA" first
+        if img.mode in ["P"]:
+            img = img.convert('RGBA')
+        if img.mode in ["RGBA"]:
+            # the default im.convert('RGB') doesn't do a good job dealing
+            # with transparency. It replaces the alpha channel with a black
+            # background, and creates jagged edges around objects.
+            # here, we "paste" the RGBA image onto a new all-white RGB
+            # image, which results in much better JPG outputs
+            background = Image.new("RGB", img.size, (255, 255, 255))
+            background.paste(img, mask=im.split()[3])
+            img = background
         #-------------
         if width == w and height == h:
             return img
@@ -204,18 +204,18 @@ def make_transform(
         #------------- Convert image made properly before moving on
         if img.mode in ["CMYK"]:
                 img = img.convert('RGB')
-            # if "P", convert to "RGBA" first
-            if img.mode in ["P"]:
-                img = img.convert('RGBA')
-            if img.mode in ["RGBA"]:
-                # the default im.convert('RGB') doesn't do a good job dealing
-                # with transparency. It replaces the alpha channel with a black
-                # background, and creates jagged edges around objects.
-                # here, we "paste" the RGBA image onto a new all-white RGB
-                # image, which results in much better JPG outputs
-                background = Image.new("RGB", img.size, (255, 255, 255))
-                background.paste(img, mask=im.split()[3])
-                img = background
+        # if "P", convert to "RGBA" first
+        if img.mode in ["P"]:
+            img = img.convert('RGBA')
+        if img.mode in ["RGBA"]:
+            # the default im.convert('RGB') doesn't do a good job dealing
+            # with transparency. It replaces the alpha channel with a black
+            # background, and creates jagged edges around objects.
+            # here, we "paste" the RGBA image onto a new all-white RGB
+            # image, which results in much better JPG outputs
+            background = Image.new("RGB", img.size, (255, 255, 255))
+            background.paste(img, mask=im.split()[3])
+            img = background
         #-------------
         crop = np.min(img.shape[:2])
         img = img[(img.shape[0] - crop) // 2 : (img.shape[0] + crop) // 2, (img.shape[1] - crop) // 2 : (img.shape[1] + crop) // 2]
