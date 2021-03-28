@@ -48,6 +48,25 @@ def is_image_ext(fname: Union[str, Path]) -> bool:
 
 #----------------------------------------------------------------------------
 
+def robust_image_convert(img):
+    if img.mode in ["CMYK"]:
+            img = img.convert('RGB')
+    # if "P", convert to "RGBA" first
+    if img.mode in ["P"]:
+        img = img.convert('RGBA')
+    if img.mode in ["RGBA"]:
+        # the default im.convert('RGB') doesn't do a good job dealing
+        # with transparency. It replaces the alpha channel with a black
+        # background, and creates jagged edges around objects.
+        # here, we "paste" the RGBA image onto a new all-white RGB
+        # image, which results in much better JPG outputs
+        background = PIL.Image.new("RGB", img.size, (255, 255, 255))
+        background.paste(img, mask=img.split()[3])
+        img = background
+    return img
+
+#----------------------------------------------------------------------------
+
 def open_image_folder(source_dir, *, max_images: Optional[int]):
     input_images = [str(f) for f in sorted(Path(source_dir).rglob('*')) if is_image_ext(f) and os.path.isfile(f)]
 
@@ -68,23 +87,23 @@ def open_image_folder(source_dir, *, max_images: Optional[int]):
         for idx, fname in enumerate(input_images):
             arch_fname = os.path.relpath(fname, source_dir)
             arch_fname = arch_fname.replace('\\', '/')
-            img = PIL.Image.open(fname)
-             #------------- Convert image made properly before moving on
-            if img.mode in ["CMYK"]:
-                    img = img.convert('RGB')
-            # if "P", convert to "RGBA" first
-            if img.mode in ["P"]:
-                img = img.convert('RGBA')
-            if img.mode in ["RGBA"]:
-                # the default im.convert('RGB') doesn't do a good job dealing
-                # with transparency. It replaces the alpha channel with a black
-                # background, and creates jagged edges around objects.
-                # here, we "paste" the RGBA image onto a new all-white RGB
-                # image, which results in much better JPG outputs
-                background = PIL.Image.new("RGB", img.size, (255, 255, 255))
-                background.paste(img, mask=img.split()[3])
-                img = background
-            #-------------
+            img = robust_image_convert(PIL.Image.open(fname))
+            #  #------------- Convert image made properly before moving on
+            # if img.mode in ["CMYK"]:
+            #         img = img.convert('RGB')
+            # # if "P", convert to "RGBA" first
+            # if img.mode in ["P"]:
+            #     img = img.convert('RGBA')
+            # if img.mode in ["RGBA"]:
+            #     # the default im.convert('RGB') doesn't do a good job dealing
+            #     # with transparency. It replaces the alpha channel with a black
+            #     # background, and creates jagged edges around objects.
+            #     # here, we "paste" the RGBA image onto a new all-white RGB
+            #     # image, which results in much better JPG outputs
+            #     background = PIL.Image.new("RGB", img.size, (255, 255, 255))
+            #     background.paste(img, mask=img.split()[3])
+            #     img = background
+            # #-------------
             img = np.array(img)
             yield dict(img=img, label=labels.get(arch_fname))
             if idx >= max_idx-1:
@@ -113,23 +132,23 @@ def open_image_zip(source, *, max_images: Optional[int]):
         with zipfile.ZipFile(source, mode='r') as z:
             for idx, fname in enumerate(input_images):
                 with z.open(fname, 'r') as file:
-                    img = PIL.Image.open(file) # type: ignore
-                    #------------- Convert image mode properly before moving on
-                    if img.mode in ["CMYK"]:
-                            img = img.convert('RGB')
-                    # if "P", convert to "RGBA" first
-                    if img.mode in ["P"]:
-                        img = img.convert('RGBA')
-                    if img.mode in ["RGBA"]:
-                        # the default im.convert('RGB') doesn't do a good job dealing
-                        # with transparency. It replaces the alpha channel with a black
-                        # background, and creates jagged edges around objects.
-                        # here, we "paste" the RGBA image onto a new all-white RGB
-                        # image, which results in much better JPG outputs
-                        background = PIL.Image.new("RGB", img.size, (255, 255, 255))
-                        background.paste(img, mask=img.split()[3])
-                        img = background
-                    #-------------
+                    img = robust_image_convert(PIL.Image.open(file)) # type: ignore
+                    # #------------- Convert image mode properly before moving on
+                    # if img.mode in ["CMYK"]:
+                    #         img = img.convert('RGB')
+                    # # if "P", convert to "RGBA" first
+                    # if img.mode in ["P"]:
+                    #     img = img.convert('RGBA')
+                    # if img.mode in ["RGBA"]:
+                    #     # the default im.convert('RGB') doesn't do a good job dealing
+                    #     # with transparency. It replaces the alpha channel with a black
+                    #     # background, and creates jagged edges around objects.
+                    #     # here, we "paste" the RGBA image onto a new all-white RGB
+                    #     # image, which results in much better JPG outputs
+                    #     background = PIL.Image.new("RGB", img.size, (255, 255, 255))
+                    #     background.paste(img, mask=img.split()[3])
+                    #     img = background
+                    # #-------------
                     img = np.array(img)
                 yield dict(img=img, label=labels.get(fname))
                 if idx >= max_idx-1:
