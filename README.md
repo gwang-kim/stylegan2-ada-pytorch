@@ -1,8 +1,20 @@
-## Need Help?
-* If you’re new to StyleGAN2-ADA and looking to get started, please check out [this video series](https://www.youtube.com/playlist?list=PLWuCzxqIpJs8ViuBIUtAk-dsAtdrApYoy) from a course Lia Coleman and I taught in October 2020.
-* Interested in contributing? Please submit PRs or discuss changes in the [Artificial Images Slack](https://join.slack.com/t/ml-images/shared_invite/zt-9mxoe7va-eBZ9xzAWpx8VRL~Km_PzUQ) channel
+# StyleGAN2-ADA-PyTorch
 
-## Edits made to this repo
+**[Open the Google Colab Notebook for this repo](https://colab.research.google.com/github/dvschultz/stylegan2-ada-pytorch/blob/main/SG2_ADA_PyTorch.ipynb)**
+
+## Please Read
+This StyleGAN2-ADA-PyTorch repository was forked from [Derrick Schultz](https://github.com/dvschultz/stylegan2-ada-pytorch), which was forked from [Nvidia's original repo](https://github.com/NVlabs/stylegan2-ada-pytorch). A huge thank you to Derrick for developing these tools to make GANs accessible for artists and newcomers, and for generously sharing his knowledge and resources **for free**. Without artists/educators like this, we would be spending much more time (and money) getting these things working. If you find that you're using this Colab notebook extensively, and especially if you're using it to make work to display outside the classroom, **_please be sure to credit [Derrick Schultz](https://www.instagram.com/dvsmethid/?hl=en)_**, and I encourage you all to consider signing up for his [Patreon](https://www.patreon.com/bustbright) or [YouTube channel](https://www.youtube.com/channel/UCaZuPdmZ380SFUMKHVsv_AA/join). You can also send him a one-time payment on [Venmo](https://venmo.com/Derrick-Schultz). Derrick also has a Slack channel dedicated to this stuff, which you can access as a Patreon subscriber.
+
+~ Doug
+<hr>
+
+## Need Help?
+* If you’re new to StyleGAN2-ADA and looking to get started, please check out [this video series](https://www.youtube.com/playlist?list=PLWuCzxqIpJs8ViuBIUtAk-dsAtdrApYoy) from a course Lia Coleman and Derrick Schultz taught in October 2020.
+
+## Edits made to Nvidia's original repo (by me)
+* **Robust image conversion**: Certain image types/modes would cause dataset_tool.py to fail when converting images for training. dataset_tool.py now handles more image types
+
+## Edits made to Nvidia's original repo (by Derrick Schultz)
 
 * **Fakes .jpg**: save yourself a ton of space with fakes during training saved as .jpg instead of .png
 * **Multiple interpolation options**: use `--process="interpolation"`, see `--help` for more options
