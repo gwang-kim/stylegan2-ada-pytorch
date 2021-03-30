@@ -2,6 +2,8 @@
 
 **[Open the Google Colab Notebook for this repo](https://colab.research.google.com/github/dougrosman/stylegan2-ada-pytorch/blob/main/SG2_ADA_PyTorch.ipynb)**
 
+**[Tutorial: using this repo in Google Colab](https://dougrosman.github.io/cvml-sp21/stylegan2-ada-pytorch-colab)**
+
 ## Please Read
 This StyleGAN2-ADA-PyTorch repository was forked from [Derrick Schultz](https://github.com/dvschultz/stylegan2-ada-pytorch), which was forked from [Nvidia's original repo](https://github.com/NVlabs/stylegan2-ada-pytorch). A huge thank you to Derrick for developing these tools to make GANs accessible for artists and newcomers, and for generously sharing his knowledge and resources **for free**. Without artists/educators like this, we would be spending much more time (and money) getting these things working. If you find that you're using this Colab notebook extensively, and especially if you're using it to make work to display outside the classroom, **_please be sure to credit [Derrick Schultz](https://www.instagram.com/dvsmethid/?hl=en)_**, and I encourage you all to consider signing up for his [Patreon](https://www.patreon.com/bustbright) or [YouTube channel](https://www.youtube.com/channel/UCaZuPdmZ380SFUMKHVsv_AA/join). You can also send him a one-time payment on [Venmo](https://venmo.com/Derrick-Schultz). Derrick also has a Slack channel dedicated to this stuff, which you can access as a Patreon subscriber.
 
