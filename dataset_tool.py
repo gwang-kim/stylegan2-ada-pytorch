@@ -59,7 +59,7 @@ def robust_image_convert(img):
       # with transparency. It replaces the alpha channel with a black
       # background, and creates jagged edges around objects.
       # here, we "paste" the RGBA image onto a new all-white RGB
-      # image, which results in much better JPG outputs #
+      # image, which results in much better JPG outputs
       background = PIL.Image.new("RGB", img.size, (255, 255, 255))
       background.paste(img, mask=img.split()[3])
       img = background
