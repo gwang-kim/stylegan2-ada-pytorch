@@ -49,7 +49,7 @@ def is_image_ext(fname: Union[str, Path]) -> bool:
 #----------------------------------------------------------------------------
 # added by Doug Rosman, converts image correctly
 def robust_image_convert(img):
-    if img.mode in ["CMYK"]:
+    if img.mode in ["CMYK"] or img.mode in ["L"]:
       img = img.convert('RGB')
     # if "P", convert to "RGBA" first
     if img.mode in ["P"]:
