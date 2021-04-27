@@ -1,5 +1,6 @@
 # StyleGAN2-ADA-PyTorch
 
+**[Open this notebook in Google Colab](https://github.com/dougrosman/stylegan2-ada-pytorch/blob/e808693ded92f28e4d25e776dfceefbe8afa64a2/SG2_ADA_PyTorch_Training.ipynb)**
 **[Tutorial: using this repo in Google Colab](https://dougrosman.github.io/cvml-sp21/resources/stylegan2-ada-pytorch-colab)**
 
 ## Please Read
